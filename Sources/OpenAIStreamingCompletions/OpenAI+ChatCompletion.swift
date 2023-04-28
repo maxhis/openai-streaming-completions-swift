@@ -77,7 +77,7 @@ extension OpenAIAPI {
                     let decoded = try JSONDecoder().decode(ChatCompletionStreamingResponse.self, from: Data(data.utf8))
                     if let delta = decoded.choices.first?.delta {
                         message.role = delta.role ?? message.role
-                        message.content += delta.content ?? ""
+                        message.content = delta.content ?? ""
                         continuation.yield(message)
                     }
                 } catch {
@@ -128,7 +128,7 @@ extension OpenAIAPI {
     }
     
     private func createChatRequest(completionRequest: ChatCompletionRequest) throws -> URLRequest {
-        let url = URL(string: "https://api.openai.com/v1/chat/completions")!
+        let url = URL(string: "https://\(host)/v1/chat/completions")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
